@@ -1,9 +1,6 @@
 local map = {}
 
 local mt = {
-	__len = function(t)
-		return #map[t].keys
-	end,
 	__pairs = function(t)
 		return pairs(map[t].keys)
 	end,
