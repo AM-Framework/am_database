@@ -5,40 +5,28 @@ local mt = {
 		return #map[t].keys
 	end,
 	__pairs = function(t)
-		local i
-		return function(t, v)
-			i, v = next(t, i)
-			return v
-		end, map[t].keys
+		return pairs(map[t].keys)
 	end,
 	__index = function(t, k)
-		if not map[t].data[k] then
-			for i, key in pairs(map[t].keys) do
-				if key == k then
-					local value = GetResourceKvpString(map[t].path .. k)
-					map[t].data[k] = tonumber(value) or value
-					break
-				end
-			end
+		if not map[t].data[k] and map[t].keys[k] then
+			local value = GetResourceKvpString(map[t].path .. k)
+			map[t].data[k] = tonumber(value) or value
 		end
 		return map[t].data[k]
 	end,
 	__newindex = function(t, k, v)
 		if not v then
-			for i, key in pairs(map[t].keys) do
-				if key == k then
-					table.remove(map[t].keys, i)
-					DeleteResourceKvp(map[t].path .. k)
-					local value = map[t].data[k]
-					if value then
-						if type(value) == 'table' then
-							for _, i in pairs(map[value].keys) do
-								t[k][i] = nil
-							end
+			if map[t].keys[k] then
+				map[t].keys[k] = nil
+				DeleteResourceKvp(map[t].path .. k)
+				local value = map[t].data[k]
+				if value then
+					if type(value) == 'table' then
+						for key in pairs(value) do
+							t[k][key] = nil
 						end
-						map[t].data[k] = nil
 					end
-					break
+					map[t].data[k] = nil
 				end
 			end
 		else
@@ -52,7 +40,7 @@ local mt = {
 				SetResourceKvp(map[t].path .. k, tostring(v))
 				map[t].data[k] = v
 			end
-			table.insert(map[t].keys, k)
+			map[t].keys[k] = true
 		end
 	end
 }
@@ -78,7 +66,7 @@ function KVP(key)
 			if not data[node] then data[node] = {} end
 			data = data[node]
 		end
-		table.insert(map[data].keys, tonumber(last) or last)
+		map[data].keys[tonumber(last) or last] = true
 	end
 	EndFindKvp(handler)
 	return obj
