@@ -1,6 +1,24 @@
 local map = {}
 
+local buildTable = function(t)
+    local res = {} 
+    for key in pairs(t) do 
+        if type(t[key]) == 'table' then
+            res[key] = buildTable(t[key])
+        else 
+            res[key] = t[key] 
+        end 
+    end 
+    return res 
+end
+
 local mt = {
+    	__call = function(t, data)
+     	     if data.action == 'build' then 
+            	return buildTable(t) 
+             end 
+    	end, 
+	
 	__pairs = function(t)
 		return pairs(map[t].keys)
 	end,
