@@ -13,4 +13,4 @@ end
 data({action = 'build'})
 
 ### fxmanifest.lua: 
-server_script '@am_database/import.lua'
+shared_script '@am_database/import.lua'
