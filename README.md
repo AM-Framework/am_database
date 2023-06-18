@@ -11,3 +11,6 @@ end
 
 ### Get the whole table and put all data in cache 
 data({action = 'build'})
+
+### fxmanifest.lua: 
+server_script '@am_database/import.lua'
