@@ -12,10 +12,22 @@ local buildTable = function(t)
     return res 
 end
 
+local unload = function(t)
+    for key in pairs(t) do
+        if type(t[key]) == 'table' then
+            unload(t[key]) 
+        end  
+    end  
+    map[t].data = nil  
+end 
+
+
 local mt = {
     	__call = function(t, data)
-     	     if data.action == 'build' then 
-            	return buildTable(t) 
+     	     if data.action == 'build' then -- this function is for getting the whole cached structured table 
+            	return buildTable(t)
+	     elseif data.action == 'unload' then -- this function is for unloading the cached data 
+	        unload(t) 
              end 
     	end, 
 	
