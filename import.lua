@@ -1,6 +1,6 @@
 local map = {}
 
-local buildTable = function(t)
+buildTable = function(t)
     local res = {} 
     for key in pairs(t) do 
         if type(t[key]) == 'table' then
@@ -12,7 +12,7 @@ local buildTable = function(t)
     return res 
 end
 
-local unload = function(t)
+unload = function(t)
     for key in pairs(t) do
         if type(t[key]) == 'table' then
             unload(t[key]) 
