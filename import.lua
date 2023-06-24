@@ -27,7 +27,9 @@ local mt = {
      	     if data.action == 'build' then -- this function is for getting the whole cached structured table 
             	return buildTable(t)
 	     elseif data.action == 'unload' then -- this function is for unloading the cached data 
-	        unload(t) 
+	        unload(t)
+		 elseif data.action == '__newindex' then 
+			map[t].__newindex = data.func  
              end 
     	end, 
 	
@@ -42,6 +44,10 @@ local mt = {
 		return map[t].data[k]
 	end,
 	__newindex = function(t, k, v)
+		if map[t].__newindex then 
+            map[t].__newindex(t, k, v) 
+        end
+		
 		if not v then
 			if map[t].keys[k] then
 				map[t].keys[k] = nil
