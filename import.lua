@@ -44,9 +44,11 @@ local mt = {
 		return map[t].data[k]
 	end,
 	__newindex = function(t, k, v)
+		if t[k] == v then return end 
+		
 		if map[t].__newindex then 
-            map[t].__newindex(t, k, v) 
-        end
+            		map[t].__newindex(t, k, v) 
+        	end
 		
 		if not v then
 			if map[t].keys[k] then
